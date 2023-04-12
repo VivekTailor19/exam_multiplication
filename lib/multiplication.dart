@@ -16,7 +16,7 @@ class _MultiplicationState extends State<Multiplication> {
   List<int> output = [];
 
   TextEditingController txtno = TextEditingController();
-  GlobalKey globalKey = GlobalKey();
+  var globalKey = GlobalKey<FormState>();
 
   bool click = false;
 
@@ -25,7 +25,7 @@ class _MultiplicationState extends State<Multiplication> {
     return Form(
       key: globalKey,
       child: SafeArea(
-        child: Scaffold(backgroundColor: Colors.teal.shade100,
+        child: Scaffold(
           appBar: AppBar(backgroundColor: Colors.teal,
               title:Text("Multiplication Table",style: TextStyle(fontSize: 20,color: Colors.white),)
 
@@ -41,10 +41,13 @@ class _MultiplicationState extends State<Multiplication> {
 
                     validator: (value) {
 
-                     if(int.parse(txtno.text) < 0)
+                      int noo = int.parse(txtno.text);
+
+                     if( noo <= 0)
                        {
-                         print("Enter Positive Number");
+                         return "Enter Positive Number";
                        }
+
 
 
                     },
@@ -59,20 +62,29 @@ class _MultiplicationState extends State<Multiplication> {
                     ),
                   ),
                 ),
+                SizedBox(height: 22),
 
-                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.cyanAccent),
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent),
                     onPressed: () {
-                  setState(() {
-                    number = int.parse(txtno.text);
-                  });
+                  if (globalKey.currentState!.validate())
+                    {
+                      setState(() {
+                        number = int.parse(txtno.text);
+                        click = true;
+                      });
+                    }
+
 
                 }, child: Text("Submit",style: TextStyle(fontSize: 25),)),
+                SizedBox(height: 22),
 
-                Expanded(child: ListView.builder(itemBuilder: (context, index) {
-                  return Tabs(no: number,num:digit[index],multi:(number * digit[index]));
-                },
-                  itemCount: 10,
-                )
+                Visibility( visible: click,
+                  child: Expanded(child: ListView.builder(itemBuilder: (context, index) {
+                    return Tabs(no: number,num:digit[index],multi:(number * digit[index]));
+                  },
+                    itemCount: 10,
+                  )
+                  ),
                 )
 
 
@@ -89,9 +101,12 @@ class _MultiplicationState extends State<Multiplication> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("$no",style: TextStyle(fontSize: 15),),
-        Text("      *       $num",style: TextStyle(fontSize: 15),),
-        Text("       =   ${multi}",style: TextStyle(fontSize: 15),)
+        Container(color:Colors.yellow,width: 50,alignment:Alignment.center,child: Text("$no",style: TextStyle(fontSize: 20),)),
+        Container(color: Colors.lightBlueAccent,width: 50,alignment:Alignment.center,child: Text("*",style: TextStyle(fontSize: 20),)),
+        Container(color:Colors.orange,width: 50,alignment:Alignment.center,child: Text("$num",style: TextStyle(fontSize: 20),)),
+        Container(color:Colors.lightBlueAccent,width: 50,alignment:Alignment.center,child: Text("=",style: TextStyle(fontSize: 20),)),
+        Container(color:Colors.green,width: 50,alignment:Alignment.center,child: Text("$multi",style: TextStyle(fontSize: 20),)),
+
       ],
     );
   }
